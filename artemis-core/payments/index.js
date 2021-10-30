@@ -6,7 +6,7 @@ const consumer = kafkaClient.consumer({
 
 async function init() {
     await consumer.connect();
-    await consumer.subscribe({topic: 'payment-confirmation', fromBeginning: true})
+    await consumer.subscribe({topic: 'payment-confirmations', fromBeginning: true})
 
     await consumer.run({
         eachMessage: async({topic, partition, message}) => {
