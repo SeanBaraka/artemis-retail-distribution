@@ -44,7 +44,7 @@ app.post("/sandbox/confirmation", (request, response) => {
 //   };
 
 
-  producer.send({topic: 'payment-confirmation', messages: [
+  producer.send({topic: 'payment-confirmations', messages: [
       {
         value: JSON.stringify(data)
       }
