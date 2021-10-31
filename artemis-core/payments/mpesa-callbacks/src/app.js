@@ -50,7 +50,7 @@ app.post("/sandbox/confirmation", (request, response) => {
       }
   ]});
 
-  response.send(testData);
+  response.send(data);
 //
 //   console.log("------ confirmation data ------");
 //   console.log(data);
