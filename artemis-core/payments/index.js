@@ -11,7 +11,7 @@ async function init() {
     await consumer.run({
         eachMessage: async({topic, partition, message}) => {
             const transaction = message.value.toString();
-            redisClient.lpush('mpesa-transactions', transaction)
+            redisClient.lpush('mpesa-transactions', transaction);
         }
     })
 }

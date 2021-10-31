@@ -18,14 +18,14 @@ app.get("/", async (request, response) => {
   response.send({ ping: "ping pong" });
 });
 
-app.get("/sandbox/validation", (request, response) => {
+app.post("/sandbox/validation", (request, response) => {
   const data = request.body;
   console.log("------ validation data ------");
   console.log(data);
   console.log("------ validation data ------");
 });
 
-app.get("/sandbox/confirmation", (request, response) => {
+app.post("/sandbox/confirmation", (request, response) => {
   const data = request.body;
 //   const testData = {
 //     TransactionType: "Pay Bill",
