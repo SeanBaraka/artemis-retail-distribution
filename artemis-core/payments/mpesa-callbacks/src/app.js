@@ -20,29 +20,12 @@ app.get("/", async (request, response) => {
 
 app.post("/sandbox/validation", (request, response) => {
   const data = request.body;
-  console.log("------ validation data ------");
-  console.log(data);
-  console.log("------ validation data ------");
+  
+  response.send({message: 'validating payment...'})
 });
 
 app.post("/sandbox/confirmation", (request, response) => {
   const data = request.body;
-//   const testData = {
-//     TransactionType: "Pay Bill",
-//     TransID: "PJU6X5M4TI",
-//     TransTime: "20211030092827",
-//     TransAmount: "600.00",
-//     BusinessShortCode: "4067985",
-//     BillRefNumber: "WEAVER",
-//     InvoiceNumber: "",
-//     OrgAccountBalance: "378275.00",
-//     ThirdPartyTransID: "",
-//     MSISDN: "254721383580",
-//     FirstName: "WYCLIFF",
-//     MiddleName: "ONSONGO",
-//     LastName: "OCHARO",
-//   };
-
 
   producer.send({topic: 'payment-confirmations', messages: [
       {
@@ -50,11 +33,7 @@ app.post("/sandbox/confirmation", (request, response) => {
       }
   ]});
 
-  response.send(data);
-//
-//   console.log("------ confirmation data ------");
-//   console.log(data);
-//   console.log("------ confirmation data ------");
+  response.send({message: 'payment confirmed'});
 });
 
 const port = process.env.PORT || 3000;
