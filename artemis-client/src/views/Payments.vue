@@ -39,21 +39,13 @@
         </div>
       </div>
       <div class="table__body">
-        <div class="row table--content">
+        <div class="row table--content" v-for="payment of payments" :key="payment.TransID">
           <div class="col-md-1">1</div>
           <div class="col-md-1">PJK3SW26K</div>
           <div class="col-md-1">07.51 p.m</div>
           <div class="col-md-2">Lazarus M. Mutinda</div>
           <div class="col-md-1">254723456785</div>
           <div class="col-md-1">KES. 1750.00</div>
-        </div>
-        <div class="row table--content">
-          <div class="col-md-1">2</div>
-          <div class="col-md-1">PQW34KRFT</div>
-          <div class="col-md-1">07.41 p.m</div>
-          <div class="col-md-2">Jeremiah N'getich</div>
-          <div class="col-md-1">25493883431</div>
-          <div class="col-md-1">KES. 1700.00</div>
         </div>
       </div>
       <div class="table__footer"></div>
@@ -65,14 +57,23 @@
 import ArtemisButton from "@/components/artemis-button/ArtemisButton.vue";
 import ArtemisInput from "@/components/artemis-input/ArtemisInput.vue";
 import { defineComponent } from "@vue/runtime-core";
+import {getPayments} from "@/services/dataservice";
 
 export default defineComponent({
   components: { ArtemisInput, ArtemisButton },
   data() {
     return {
       searchParam: "",
+      payments: Array
     };
   },
+  mounted() {
+      getPayments().then((resp) => {
+          this.payments = resp;
+      }).catch(erro => {
+          console.log(erro)
+      })
+  }
 });
 </script>
 

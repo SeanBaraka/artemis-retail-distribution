@@ -1,10 +1,12 @@
 import express from 'express';
 import morgan from 'morgan';
 import indexRouter from './controller/index.controller.js';
+import cors from 'cors'
 
 var app = express();
 app.use(morgan("dev"));
-app.use(express.json())
+app.use(express.json());
+app.use(cors())
 
 app.use('/payments', indexRouter)
 
