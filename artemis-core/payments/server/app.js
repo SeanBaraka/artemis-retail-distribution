@@ -4,7 +4,7 @@ import indexRouter from './controller/index.controller.js';
 import cors from 'cors'
 import { Server } from 'socket.io';
 import http from 'http'
-
+import mongoose from 'mongoose';
 
 
 var app = express();
@@ -29,7 +29,8 @@ app.use(socketMiddleware);
 app.use('/payments', indexRouter)
 
 const PORT = process.env.PORT || 3098
-httpserver.listen(PORT, () => {
+httpserver.listen(PORT, async() => {
+    await mongoose.connect('mongodb://localhost:27017/weaver-sales')
     io.on('connection', (socket)=> {
         console.log('a new user has connected', socket.id)
     })

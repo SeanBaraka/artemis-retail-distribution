@@ -1,0 +1,9 @@
+[0;1;31m●[0m mongod.service - MongoDB Database Server
+     Loaded: loaded (/lib/systemd/system/mongod.service; disabled; vendor preset: enabled)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Fri 2021-11-12 14:00:53 CET; 11s ago
+       Docs: https://docs.mongodb.org/manual
+   Main PID: 1225197 (code=exited, status=14)
+
+Nov 12 14:00:53 vmi639870.contaboserver.net systemd[1]: Started MongoDB Database Server.
+Nov 12 14:00:53 vmi639870.contaboserver.net systemd[1]: [0;1;39m[0;1;31m[0;1;39mmongod.service: Main process exited, code=exited, status=14/n/a[0m
+Nov 12 14:00:53 vmi639870.contaboserver.net systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mmongod.service: Failed with result 'exit-code'.[0m
