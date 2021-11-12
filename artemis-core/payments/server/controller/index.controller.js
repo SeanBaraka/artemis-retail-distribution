@@ -15,4 +15,10 @@ indexRouter.get('', (request, response) => {
     });
 })
 
+indexRouter.post('/sellorder', (request, response) => {
+    console.log(request.body);
+
+    response.send('ok')
+})
+
 export default indexRouter;
