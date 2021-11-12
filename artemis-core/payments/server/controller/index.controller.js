@@ -18,7 +18,13 @@ indexRouter.get('', (request, response) => {
 indexRouter.post('/sellorder', (request, response) => {
     console.log(request.body);
 
-    response.send('ok')
+    response.send('ok');
+})
+
+indexRouter.get('/quick-sales', (request, response) => {
+    const socket = request.io
+    socket.emit('ping', ('pong data'));
+    response.send({sales: 'ok'})
 })
 
 export default indexRouter;
