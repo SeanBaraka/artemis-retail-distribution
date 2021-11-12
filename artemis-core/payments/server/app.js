@@ -13,7 +13,12 @@ app.use(express.json());
 app.use(cors())
 
 const httpserver = http.createServer(app)
-const io = new Server(httpserver);
+const io = new Server(httpserver, {
+    cors: {
+        origin: "*",
+        allowedHeaders: "*"
+    }
+});
 
 function socketMiddleware(request, response, next) {
     request.io = io
