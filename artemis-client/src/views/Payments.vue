@@ -12,7 +12,7 @@
         </div>
         <div class="balance--info col-md-2">
           <span class="success">Current Bal: </span>
-          <span>KES. 128,015</span>
+          <span>KES. {{orgBalance}}</span>
         </div>
         <div class="search-bar col-md-5">
           <div class="row">
@@ -31,6 +31,7 @@
       <div class="table__header">
         <div class="row table--heading">
           <div class="col-md-1">#</div>
+          <div class="col-md-1">Date</div>
           <div class="col-md-1">Trans.ID</div>
           <div class="col-md-1">Time</div>
           <div class="col-md-2">Customer Name</div>
@@ -39,13 +40,14 @@
         </div>
       </div>
       <div class="table__body">
-        <div class="row table--content" v-for="payment of payments" :key="payment.TransID">
-          <div class="col-md-1">1</div>
-          <div class="col-md-1">PJK3SW26K</div>
-          <div class="col-md-1">07.51 p.m</div>
-          <div class="col-md-2">Lazarus M. Mutinda</div>
-          <div class="col-md-1">254723456785</div>
-          <div class="col-md-1">KES. 1750.00</div>
+        <div class="row table--content" v-for="(payment, index) of payments" :key="payment.TransID">
+          <div class="col-md-1">{{index +1}}</div>
+          <div class="col-md-1">{{payment.Date}}</div>
+          <div class="col-md-1">{{payment.TransID}}</div>
+          <div class="col-md-1">{{payment.TransTime}}</div>
+          <div class="col-md-2">{{payment.Name}}</div>
+          <div class="col-md-1">{{payment.MSISDN}}</div>
+          <div class="col-md-1">KES. {{payment.TransAmount}}</div>
         </div>
       </div>
       <div class="table__footer"></div>
@@ -57,22 +59,49 @@
 import ArtemisButton from "@/components/artemis-button/ArtemisButton.vue";
 import ArtemisInput from "@/components/artemis-input/ArtemisInput.vue";
 import { defineComponent } from "@vue/runtime-core";
-import {getPayments} from "@/services/dataservice";
+import {getPayments, getTotalSales} from "@/services/dataservice";
 
 export default defineComponent({
   components: { ArtemisInput, ArtemisButton },
   data() {
     return {
       searchParam: "",
-      payments: Array
+      payments: '',
+      orgBalance: Number
     };
   },
   mounted() {
-      getPayments().then((resp) => {
-          this.payments = resp;
-      }).catch(erro => {
-          console.log(erro)
+    getTotalSales(2).then((response: any) => {
+        console.log('%csales response', "background: red; color: #fff")
+        console.log(response)
+      }).catch(error => {
+        console.log(error.message)
       })
+      getPayments().then((resp) => {
+          for(var i = 0; i < resp.payments.length; i ++) {
+            const weirdTime = resp.payments[i].TransTime
+            const year = weirdTime.toString().slice(0,4);
+            const month = weirdTime.toString().slice(4,6);
+            const day = weirdTime.toString().slice(6,8)
+            var hour = weirdTime.toString().slice(8,10);
+            var minutes = weirdTime.toString().slice(10,12);
+            var ext = hour >= 12 ? 'p.m' : 'a.m'
+            let formatedHour = hour - 12
+            formatedHour == 0 ? formatedHour = 12 : formatedHour < 0 ? formatedHour = hour : formatedHour
+            resp.payments[i].TransTime = formatedHour+':' + minutes + ' ' + ext;
+            resp.payments[i].Name = `${resp.payments[i].FirstName} ${resp.payments[i].MiddleName} ${resp.payments[i].LastName}`;
+            resp.payments[i].TransAmount = Number(resp.payments[i].TransAmount).toFixed(2);
+            resp.payments[i].Date = `${day}/${month}/${year}`
+          }
+          this.payments = resp.payments;
+          this.orgBalance = resp.payments[0].OrgAccountBalance
+      }).catch(error => {
+        console.log('an error occured getting payments')
+          console.log(error)
+      })
+  },
+  methods: {
+    
   }
 });
 </script>
