@@ -2,6 +2,14 @@ import { Router } from "express";
 import { redisClient } from "../../../messaging/index.js";
 import { Sale } from "../models/sale.js";
 
+import * as admin from 'firebase-admin';
+const serviceAccount = require('../firebase.account.key.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+
+
 var indexRouter = Router();
 
 indexRouter.get('', (request, response) => {
@@ -34,6 +42,20 @@ indexRouter.post('/sellorder', async(request, response) => {
         if (sell) {
             // Emit a websocket event to the GUI, updating the new list of sale records
             io.emit('update-sale', sell);
+
+            // send a firebase notification to the mobile client
+            admin.messaging().send({
+                notification: {
+                    title: "Realtime sales !!",
+                    body: `A new sale has been made\nReceipt #${sell.receiptNumber}\nAmount KES. ${sell.amount}\nShop ${shop}`
+                }
+            })
+            .then((response) => {
+                console.log('sell notification should be sent')
+            })
+            .catch((err) => {
+                console.log('sell notification not sent', err.message)
+            })
             response.send({status: 200, message: 'sale recorded'})
         }
     } catch (error) {
