@@ -33,9 +33,9 @@ indexRouter.post('/sellorder', async(request, response) => {
         receiptNumber: data.receiptNumber,
         paymentMethod: data.paymentMethod,
         amount: data.totalAmount,
-        amountReceived: data.amountReceived
+        amountReceived: data.amountReceived,
+        itemCount: Array.from(JSON.parse(data.saleItems)).length
     })
-
     try {
         // Attempt to save the received sell record
         const sell = await saleRecord.save();
