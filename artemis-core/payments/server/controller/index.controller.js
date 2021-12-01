@@ -2,8 +2,8 @@ import { Router } from "express";
 import { redisClient } from "../../../messaging/index.js";
 import { Sale } from "../models/sale.js";
 
-import * as admin from 'firebase-admin';
-const serviceAccount = require('../firebase.account.key.json');
+import admin from 'firebase-admin';
+import serviceAccount  from '../firebase.account.key.json';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -34,7 +34,7 @@ indexRouter.post('/sellorder', async(request, response) => {
         paymentMethod: data.paymentMethod,
         amount: data.totalAmount,
         amountReceived: data.amountReceived,
-        itemCount: Array.from(JSON.parse(data.saleItems)).length
+        itemCount: data.items.length
     })
     try {
         // Attempt to save the received sell record
@@ -42,16 +42,16 @@ indexRouter.post('/sellorder', async(request, response) => {
         if (sell) {
             // Emit a websocket event to the GUI, updating the new list of sale records
             io.emit('update-sale', sell);
-
             // send a firebase notification to the mobile client
             admin.messaging().send({
                 notification: {
                     title: "Realtime sales !!",
                     body: `A new sale has been made\nReceipt #${sell.receiptNumber}\nAmount KES. ${sell.amount}\nShop ${shop}`
-                }
+                },
+                topic: 'sales'
             })
             .then((response) => {
-                console.log('sell notification should be sent')
+                console.log('sell notification should be sent', response)
             })
             .catch((err) => {
                 console.log('sell notification not sent', err.message)
@@ -59,7 +59,7 @@ indexRouter.post('/sellorder', async(request, response) => {
             response.send({status: 200, message: 'sale recorded'})
         }
     } catch (error) {
-        console.log('an error occured during execution', error.code)
+        console.log('an error occured during execution', error)
         response.status(500).send({status: 500, message: error.message})
     }
 })
